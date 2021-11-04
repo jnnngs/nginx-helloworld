@@ -2,7 +2,7 @@ FROM nginx
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
-ADD src/ /var/www
+COPY src/ /var/www
 
 EXPOSE 8181
 
