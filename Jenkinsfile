@@ -6,7 +6,7 @@ node {
 
     currentBuild.displayName = "${buildtag}"
 
-    notifyEvents message: 'Hello <b>world</b>', token: env.SLACK_TOKEN
+    notifyEvents message: "${env.BUILD_TAG} - Message <br/>Building: ${env.PROJECT_NAME}: #${env.BUILD_NUMBER} - ${env.BUILD_STATUS}", token: env.SLACK_TOKEN
     
     stage "Checkout"
     checkout scm
