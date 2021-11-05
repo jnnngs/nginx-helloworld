@@ -20,12 +20,12 @@ node {
     stage "notification & wait(demo)"
     sh "echo '[i] the deployment has now finished'"
     sh "echo 'Go to this link to see the page/site http://localhost:8181/'"
-//    sh "echo 'And this will disappear after 600 seconds';sleep 600"
+    sh "echo 'And this will disappear after 600 seconds';sleep 600"
 
     stage "finish build"
-    sh "echo 'lets NOT clean any thing, shall we?'"
-    // sh "echo '[i] cleaning up all resources'"
-    // sh "docker rm -f nginx-hw-example-${env.BUILD_NUMBER}"
-    // sh "docker rmi ${buildtag}"
+//    sh "echo 'lets NOT clean any thing, shall we?'"
+    sh "echo '[i] cleaning up all resources'"
+     sh "docker rm -f nginx-hw-example-${env.BUILD_NUMBER}"
+     sh "docker rmi ${buildtag}"
 }
 
