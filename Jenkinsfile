@@ -6,7 +6,7 @@ node {
 
     currentBuild.displayName = "${buildtag}"
 
-    notifyEvents message: "${env.BUILD_TAG} - Message <br/>Building: ${env.PROJECT_NAME}: #${env.BUILD_NUMBER} - ${env.BUILD_STATUS}", token: env.SLACK_TOKEN
+    notifyEvents message: "Building: #${env.BUILD_TAG} - <b>Building</b>", token: env.SLACK_TOKEN
     
     stage "Checkout"
     checkout scm
@@ -27,7 +27,8 @@ node {
     stage "finish build"
 //    sh "echo 'lets NOT clean any thing, shall we?'"
     sh "echo '[i] cleaning up all resources'"
-     sh "docker rm -f nginx-hw-example-${env.BUILD_NUMBER}"
-     sh "docker rmi ${buildtag}"
+    sh "docker rm -f nginx-hw-example-${env.BUILD_NUMBER}"
+    sh "docker rmi ${buildtag}"
+    notifyEvents message: "Building: #${env.BUILD_TAG} - <b>Finished</b> <br/>${env.PROJECT_NAME}: #${env.BUILD_NUMBER} - ${env.BUILD_STATUS}", token: env.SLACK_TOKEN
 }
 
