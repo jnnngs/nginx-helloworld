@@ -20,7 +20,7 @@ node {
     stage "notification & wait(demo)"
     sh "echo '[i] the deployment has now finished'"
     sh "echo 'Go to this link to see the page/site http://localhost:8181/'"
-    sh "echo 'And this will disappear after 180 seconds';sleep 180"
+    sh "echo 'And this will disappear after 120 seconds';sleep 120"
 
     stage "finish build"
 //    sh "echo 'lets NOT clean any thing, shall we?'"
