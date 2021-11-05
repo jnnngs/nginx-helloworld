@@ -6,7 +6,7 @@ node {
 
     currentBuild.displayName = "${buildtag}"
 
-    notifyEvents message: "${TAG_TIMESTAMP} - <b>Building</b>: ${env.JOB_NAME}, build #${env.BUILD_NUMBER}", token: env.SLACK_TOKEN
+    notifyEvents message: "${env.TAG_TIMESTAMP} - <b>Building</b>: ${env.JOB_NAME}, build #${env.BUILD_NUMBER}", token: env.SLACK_TOKEN
     
     stage "Checkout"
         checkout scm
@@ -17,13 +17,13 @@ node {
 
     stage "Deploy "
         sh "echo '[i] deploying locally'"
-        notifyEvents message: "${TAG_TIMESTAMP} - <b>Deploying</b>: ${env.JOB_NAME}, build #${env.BUILD_NUMBER}", token: env.SLACK_TOKEN
+        notifyEvents message: "${env.TAG_TIMESTAMP} - <b>Deploying</b>: ${env.JOB_NAME}, build #${env.BUILD_NUMBER}", token: env.SLACK_TOKEN
         sh "docker run -d -p 8181:8181 --name nginx-hw-example-${env.BUILD_NUMBER} ${buildtag}"
 
     stage "notification & wait"
         sh "echo '[i] the deployment has now finished'"
         sh "echo 'Go to this link to see the page/site http://localhost:8181/'"
-        notifyEvents message: "${TAG_TIMESTAMP} - <b>Sleeping</b>: ${env.JOB_NAME}, build #${env.BUILD_NUMBER}", token: env.SLACK_TOKEN
+        notifyEvents message: "${env.TAG_TIMESTAMP} - <b>Sleeping</b>: ${env.JOB_NAME}, build #${env.BUILD_NUMBER}", token: env.SLACK_TOKEN
         sh "echo 'And this will disappear after 120 seconds';sleep 120"
 
     stage "finish build & clean-up"
@@ -31,7 +31,7 @@ node {
         sh "echo '[i] cleaning up all resources'"
         sh "docker rm -f nginx-hw-example-${env.BUILD_NUMBER}"
         sh "docker rmi ${buildtag}"
-        notifyEvents message: "${TAG_TIMESTAMP} - <b>Finished</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, build #${env.BUILD_NUMBER}, result with status: <b>${currentBuild.currentResult}</b>", token: env.SLACK_TOKEN
-        notifyEvents message: "${TAG_TIMESTAMP} - <a target='_blank' href='${env.BUILD_LOG}'>Build log</a>", token: env.SLACK_TOKEN
+        notifyEvents message: "${env.TAG_TIMESTAMP} - <b>Finished</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, build #${env.BUILD_NUMBER}, result with status: <b>${currentBuild.currentResult}</b>", token: env.SLACK_TOKEN
+        notifyEvents message: "${env.TAG_TIMESTAMP} - <a target='_blank' href='${env.BUILD_LOG}'>Build log</a>", token: env.SLACK_TOKEN
 }
 
