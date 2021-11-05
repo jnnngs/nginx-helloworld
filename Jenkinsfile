@@ -6,6 +6,8 @@ node {
 
     currentBuild.displayName = "${buildtag}"
 
+    notifyEvents message: 'Hello <b>world</b>', token: env.SLACK_TOKEN
+    
     stage "Checkout"
     checkout scm
 
