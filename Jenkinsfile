@@ -6,7 +6,7 @@ node {
 
     currentBuild.displayName = "${buildtag}"
 
-    notifyEvents message: "Building: ${env.BUILD_TAG} - <b>Building</b>", token: env.SLACK_TOKEN
+    notifyEvents message: "<b>Building<\b>: ${env.JOB_NAME}, build #${env.BUILD_NUMBER}", token: env.SLACK_TOKEN
     
     stage "Checkout"
     checkout scm
@@ -17,7 +17,7 @@ node {
 
     stage "Deploy "
     sh "echo '[i] deploying locally'"
-    notifyEvents message: "Deploying: ${env.BUILD_TAG} - <b>Building</b>", token: env.SLACK_TOKEN
+    notifyEvents message: "<b>Deploying<\b>: ${env.JOB_NAME}, build #${env.BUILD_NUMBER}", token: env.SLACK_TOKEN
     sh "docker run -d -p 8181:8181 --name nginx-hw-example-${env.BUILD_NUMBER} ${buildtag}"
 
     stage "notification & wait"
@@ -30,7 +30,7 @@ node {
     sh "echo '[i] cleaning up all resources'"
     sh "docker rm -f nginx-hw-example-${env.BUILD_NUMBER}"
     sh "docker rmi ${buildtag}"
-    notifyEvents message: "Finished: <a target='_blank' href='${env.BUILD_URL}'>${env.BUILD_TAG}</a> result with status: <b>${currentBuild.result}<b/>", token: env.SLACK_TOKEN
+    notifyEvents message: "<b>Finished<\b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, build #${env.BUILD_NUMBER}, result with status: <b>${currentBuild.currentResult}<b/>", token: env.SLACK_TOKEN
     notifyEvents message: "<a target='_blank' href='${env.BUILD_LOG}'>Build log</a>", token: env.SLACK_TOKEN
 }
 
