@@ -31,7 +31,7 @@ node {
     sh "echo '[i] cleaning up all resources'"
     sh "docker rm -f nginx-hw-example-${env.BUILD_NUMBER}"
     sh "docker rmi ${buildtag}"
-    notifyEvents message: "<b>Finished</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, build #${env.BUILD_NUMBER}, result with status: <b>${currentBuild.currentResult}<b/>", token: env.SLACK_TOKEN
+    notifyEvents message: "<b>Finished</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, build #${env.BUILD_NUMBER}, result with status: <b>${currentBuild.currentResult}</b>", token: env.SLACK_TOKEN
     notifyEvents message: "<a target='_blank' href='${env.BUILD_LOG}'>Build log</a>", token: env.SLACK_TOKEN
 }
 
