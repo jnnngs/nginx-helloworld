@@ -20,12 +20,22 @@ node {
         notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Deploying</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
         sh "docker run -d -p 8181:8181 --name nginx-hw-example-${env.BUILD_NUMBER} ${buildtag}"
 
-    stage "notification & wait"
-        sh "echo '[i] the deployment has now finished'"
-        sh "echo 'Go to this link to see the page/site http://localhost:8181/'"
-        notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Sleeping</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
-        sh "echo 'And this will disappear after 120 seconds';sleep 120"
+//    stage "notification & wait"
+//       sh "echo '[i] the deployment has now finished'"
+//        sh "echo 'Go to this link to see the page/site http://localhost:8181/'"
+//        notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Sleeping</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
+//        sh "echo 'And this will disappear after 120 seconds';sleep 120"
 
+    stage "check if docker container exists"
+        def inspectExitCode = sh script: "docker service inspect nginx-hw-example-${env.BUILD_NUMBER}", returnStatus: true
+        if (inspectExitCode == 0) {
+           //sh "docker service update --name loginService ... "
+           notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Testing</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Build</b> #${env.BUILD_NUMBER}, <b>Container</b> EXISTS, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
+        } else {
+           //sh script: "docker service create --name loginService ... "
+           notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Testing</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Build</b> #${env.BUILD_NUMBER}, <b>Container</b> DOES NOT EXISTS <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN 
+        }
+    
     stage "finish build & clean-up"
 //        sh "echo 'lets NOT clean any thing, shall we?'"
         sh "echo '[i] cleaning up all resources'"
