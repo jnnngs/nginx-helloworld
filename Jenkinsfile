@@ -20,20 +20,14 @@ node {
         notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Deploying</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
         sh "docker run -d -p 8181:8181 --name nginx-hw-example-${env.BUILD_NUMBER} ${buildtag}"
 
-    stage('Check Availability') {
-      steps {             
-          waitUntil {
-              try {         
-                  sh "curl -s --head  --request GET  localhost:8081/actuator/health | grep '200'"
-                  return true
-              } catch (Exception e) {
-                    return false
-              }
-          }
-       }
-     }
-
-    
+    stage "Check Availability"
+        try {         
+            sh "curl -s --head  --request GET  localhost:8181 | grep '200'"
+            return true
+        } catch (Exception e) {
+            return false
+        }
+   
 //    stage "notification & wait"
 //       sh "echo '[i] the deployment has now finished'"
 //        sh "echo 'Go to this link to see the page/site http://localhost:8181/'"
