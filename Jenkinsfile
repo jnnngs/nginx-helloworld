@@ -22,7 +22,7 @@ node {
 
     stage "Check Availability"
         try {         
-            sh "curl -s --head  --request GET  localhost:8181 | grep '200'"
+            sh "curl -s --head --request GET  localhost:8182 | grep '200'"
             return true
         } catch (Exception e) {
             return false
