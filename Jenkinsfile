@@ -1,5 +1,4 @@
 node {
-
     
     def app
 	def image = 'registry.hub.docker.com/jnnngs/nginx-helloworld'
@@ -36,15 +35,17 @@ node {
             return false
         }
    
-    stage "Push image"
+    stage "Push image to DockerHub"
 	try { 
     	    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials')
 		{
                 app.push("latest")  
 	        }
+	    echo "Push Success"
+	    notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Dockerhub push</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>DockerHub</b> #${env.BUILD_NUMBER}, <b>PUSH FAILED</b>, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN 
 	} catch (Exception e) {
             echo "Push failed"
-            notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Dockerhub push</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Build</b> #${env.BUILD_NUMBER}, <b>PUSH</b> to DockerHub failed <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN 
+            notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Dockerhub push</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>DockerHub</b> #${env.BUILD_NUMBER}, <b>PUSH SUCCESS</b>, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN 
             sh "echo '[i] cleaning up all resources'"
             sh "docker rm -f nginx-hw-example-${env.BUILD_NUMBER}"
             sh "docker rmi ${buildtag}"
