@@ -32,8 +32,7 @@ node {
             return false
         }
    
-    stage('Push image') 
-        /* Push the image into Docker Hub */
+    stage "Push image"
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
             app.push("latest")
     
@@ -45,4 +44,3 @@ node {
         notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Finished</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Build</b> #${env.BUILD_NUMBER}, <b>Status</b> ${currentBuild.currentResult}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
         notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <a target='_blank' href='${env.BUILD_LOG}'>Build log</a>", token: env.SLACK_TOKEN
 }
-
