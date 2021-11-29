@@ -1,5 +1,8 @@
 node {
 
+    
+    def app
+	def image = 'registry.hub.docker.com/jnnngs/nginx-helloworld'
     def buildtag = "nginx-hello-world-${env.BUILD_NUMBER}"
 
     def branch = "${env.BRANCH_NAME}".replaceAll('/','_')
@@ -14,6 +17,7 @@ node {
     stage " Creating docker image"
         sh "echo '[i] building docker image'"
         docker.build "${buildtag}"
+        app = docker.build image
 
     stage "Deploy "
         sh "echo '[i] deploying locally'"
