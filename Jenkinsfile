@@ -1,7 +1,7 @@
 node {
     
     def app
-	def image = 'registry.hub.docker.com/jnnngs/nginx-helloworld'
+    //def image = 'registry.hub.docker.com/jnnngs/nginx-helloworld'
     def buildtag = "nginx-hello-world-${env.BUILD_NUMBER}"
 
     def branch = "${env.BRANCH_NAME}".replaceAll('/','_')
@@ -53,7 +53,6 @@ node {
         }		
     
     stage "finish build & clean-up"
-//        sh "echo 'lets NOT clean any thing, shall we?'"
         sh "echo '[i] cleaning up all resources'"
         sh "docker rm -f nginx-hw-example-${env.BUILD_NUMBER}"
         sh "docker rmi ${buildtag}"
