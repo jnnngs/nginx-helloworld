@@ -40,7 +40,7 @@ node {
           waitUntil {
             try { 
                 app.inside{
-                    sh "curl -s --head  --request GET localhost:8181 | grep '200'"
+                    sh "curl -s --head  --request GET localhost:8182 | grep '200'"
                     echo "Web Availability GOOD"
 		    return true
                 }
