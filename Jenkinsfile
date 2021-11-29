@@ -38,8 +38,10 @@ node {
    
     stage "Push image"
 	try { 
-    		docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials'){
-            	app.push("latest")             
+    	    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials')
+		{
+                app.push("latest")  
+	        }
 	} catch (Exception e) {
             echo "Push failed"
             notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Dockerhub push</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Build</b> #${env.BUILD_NUMBER}, <b>PUSH</b> to DockerHub failed <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN 
@@ -48,7 +50,6 @@ node {
             sh "docker rmi ${buildtag}"
 	    return false
         }		
-    }
     
     stage "finish build & clean-up"
 //        sh "echo 'lets NOT clean any thing, shall we?'"
