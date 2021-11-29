@@ -32,12 +32,10 @@ node {
             return false
         }
    
-    stage('Push image') {
-        /* Finally, we'll push the image into Docker Hub */
-
+    stage('Push image') 
+        /* Push the image into Docker Hub */
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
             app.push("latest")
-        }
     
     stage "finish build & clean-up"
 //        sh "echo 'lets NOT clean any thing, shall we?'"
