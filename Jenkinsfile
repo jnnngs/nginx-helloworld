@@ -1,7 +1,7 @@
 node {
     
     def app
-    //def image = 'registry.hub.docker.com/jnnngs/nginx-helloworld'
+    def image = 'registry.hub.docker.com/jnnngs/nginx-helloworld'
     def buildtag = "nginx-hello-world-${env.BUILD_NUMBER}"
 
     def branch = "${env.BRANCH_NAME}".replaceAll('/','_')
