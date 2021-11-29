@@ -32,21 +32,12 @@ node {
             return false
         }
    
-//    stage "notification & wait"
-//       sh "echo '[i] the deployment has now finished'"
-//        sh "echo 'Go to this link to see the page/site http://localhost:8181/'"
-//        notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Sleeping</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
-//        sh "echo 'And this will disappear after 120 seconds';sleep 120"
+    stage('Push image') {
+        /* Finally, we'll push the image into Docker Hub */
 
-//    stage "check if docker container exists"
-//        try {         
-//            new URL("http://localhost:8181").getText()
-//            notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Testing</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Build</b> #${env.BUILD_NUMBER}, <b>Container</b> EXISTS, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
-//            return true
-//        } catch (Exception e) {
-//            notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Testing</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Build</b> #${env.BUILD_NUMBER}, <b>Container</b> DOES NOT EXISTS <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN 
-//            return false
-//        }
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+            app.push("latest")
+        }
     
     stage "finish build & clean-up"
 //        sh "echo 'lets NOT clean any thing, shall we?'"
