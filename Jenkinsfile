@@ -73,10 +73,10 @@ node {
         notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Finished</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Build</b> #${env.BUILD_NUMBER}, <b>Status</b> ${currentBuild.currentResult}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN  
         notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <a target='_blank' href='${env.BUILD_LOG}'>Build log</a>", token: env.SLACK_TOKEN
         if ( success ) { 
-            notifyEvents message: "<b>*-- SUCCESS ${env.JOB_NAME}, Build #${env.BUILD_NUMBER} --*</b>", token: env.SLACK_TOKEN
+            notifyEvents message: "<b>*-- Finished with SUCCESS ${env.JOB_NAME}, Build #${env.BUILD_NUMBER} --*</b>", token: env.SLACK_TOKEN
             return true
         } else {
-            notifyEvents message: "<b>*-- !! FAILED ${env.JOB_NAME}, Build #${env.BUILD_NUMBER} !! --*</b>", token: env.SLACK_TOKEN
+            notifyEvents message: "<b>*-- !! Finished but FAILED ${env.JOB_NAME}, Build #${env.BUILD_NUMBER} !! --*</b>", token: env.SLACK_TOKEN
             return false
         }
      
