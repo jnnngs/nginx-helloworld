@@ -3,16 +3,20 @@ node {
     def success = false
     def deployed = false
     def app
+    def stage
     def image = 'registry.hub.docker.com/jnnngs/nginx-helloworld'
     def buildtag = "nginx-hello-world-${env.BUILD_NUMBER}"
     def branch = "${env.BRANCH_NAME}".replaceAll('/','_')
+    def notifyMessageSyntax = "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>${stage}</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
 
     currentBuild.displayName = "${buildtag}"
 
     notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Building</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
     
     stage "Checkout" 
+        stage = "Checkout" 
         checkout scm
+        notifyEvents message: notifyMessageSyntax, token: env.SLACK_TOKEN
 
     stage " Creating docker image"
         sh "echo '[i] building docker image'"
