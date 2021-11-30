@@ -7,21 +7,20 @@ node {
     def image = 'registry.hub.docker.com/jnnngs/nginx-helloworld'
     def buildtag = "nginx-hello-world-${env.BUILD_NUMBER}"
     def branch = "${env.BRANCH_NAME}".replaceAll('/','_')
-    def notifyMessageSyntax = "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>${stage}</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}"
-
-    currentBuild.displayName = "${buildtag}"
-
-    notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Building</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
     
+    currentBuild.displayName = "${buildtag}"
+    
+    notifyEvents message: "## Starting ${env.JOB_NAME}, Build #${env.BUILD_NUMBER} ##", token: env.SLACK_TOKEN
+
     stage "Checkout" 
-        stage = "Checkout" 
         checkout scm
-        notifyEvents message: notifyMessageSyntax, token: env.SLACK_TOKEN
+        notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Checkout</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
 
     stage " Creating docker image"
         sh "echo '[i] building docker image'"
         docker.build "${buildtag}"
         app = docker.build image
+        notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Building</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
 
     stage "Deploy "
         sh "echo '[i] deploying locally'"
@@ -70,12 +69,12 @@ node {
      }
      stage "Check if finished successfully"
      if ( success ) { 
-         echo "Finshed Successfully"
+         notifyEvents message: "## Finished ${env.JOB_NAME}, Build #${env.BUILD_NUMBER} ##", token: env.SLACK_TOKEN
          notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Finished</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Build</b> #${env.BUILD_NUMBER}, <b>Status</b> ${currentBuild.currentResult}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN  
          notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <a target='_blank' href='${env.BUILD_LOG}'>Build log</a>", token: env.SLACK_TOKEN
          return true
      } else {
-        echo "Finshed UnSuccessfully"
+        notifyEvents message: "!! Failed ${env.JOB_NAME}, Build #${env.BUILD_NUMBER} !!", token: env.SLACK_TOKEN
         notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Finished</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Build</b> #${env.BUILD_NUMBER}, <b>Status</b> ${currentBuild.currentResult}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN  
         notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <a target='_blank' href='${env.BUILD_LOG}'>Build log</a>", token: env.SLACK_TOKEN
         return false
