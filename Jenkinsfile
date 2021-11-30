@@ -28,7 +28,7 @@ node {
         try {         
             sh "docker ps | grep 'nginx-hw-example-${env.BUILD_NUMBER}'"
             echo "Docker Availability GOOD"
-            notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Testing</b>: ${env.JOB_NAME}, ${env.BUILD_TAG}, <b>Test</b> #${env.BUILD_NUMBER}, <b>Container</b> EXISTS, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
+            notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Testing</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
             deployed = true
             success = true
         } catch (Exception e) {
@@ -45,7 +45,7 @@ node {
                     app.push("latest")  
                 }
             echo "Push Success: TAG latest"
-            notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Dockerhub push</b>: ${env.JOB_NAME}, ${env.BUILD_TAG}, <b>DockerHub</b> #${env.BUILD_NUMBER}, <b>PUSH SUCCESS</b>, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN 
+            notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Pushing</b>:: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN 
             success = true
         } catch (Exception e) {
                 echo "Push failed"
