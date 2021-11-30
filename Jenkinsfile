@@ -7,7 +7,7 @@ node {
     def image = 'registry.hub.docker.com/jnnngs/nginx-helloworld'
     def buildtag = "nginx-hello-world-${env.BUILD_NUMBER}"
     def branch = "${env.BRANCH_NAME}".replaceAll('/','_')
-    def notifyMessageSyntax = "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>${stage}</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
+    def notifyMessageSyntax = "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>${stage}</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}"
 
     currentBuild.displayName = "${buildtag}"
 
