@@ -57,7 +57,7 @@ node {
                 success = false
             }	
     }	
-     if ( delpoyed ) {     
+     if ( deployed ) {     
         stage "finish build & clean-up"
         sh "echo '[i] cleaning up all resources'"
         sh "docker rm -f nginx-hw-example-${env.BUILD_NUMBER}"
