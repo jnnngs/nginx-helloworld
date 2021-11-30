@@ -55,6 +55,7 @@ node {
             
             }
         }
+        
     stage "Push image to DockerHub"
 	try { 
     	    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials')
