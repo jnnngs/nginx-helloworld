@@ -3,7 +3,6 @@ node {
     def success = false
     def deployed = false
     def app
-    def stage
     def image = 'registry.hub.docker.com/jnnngs/nginx-helloworld'
     def buildtag = "nginx-hello-world-${env.BUILD_NUMBER}"
     def branch = "${env.BRANCH_NAME}".replaceAll('/','_')
@@ -16,7 +15,7 @@ node {
         checkout scm
         notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Checkout</b>: ${env.JOB_NAME}, <b>Build</b> #${env.BUILD_NUMBER}, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
 
-    stage " Creating docker image"
+    stage "Creating docker image"
         sh "echo '[i] building docker image'"
         docker.build "${buildtag}"
         app = docker.build image
@@ -60,6 +59,7 @@ node {
                 success = false
             }	
     }	
+    
      if ( deployed ) {     
         stage "finish build & clean-up"
         sh "echo '[i] cleaning up all resources'"
@@ -67,6 +67,7 @@ node {
         sh "docker rmi ${buildtag}"
         deployed = false
      }
+
      stage "Check if finished successfully"
      if ( success ) { 
          notifyEvents message: "## Finished ${env.JOB_NAME}, Build #${env.BUILD_NUMBER} ##", token: env.SLACK_TOKEN
