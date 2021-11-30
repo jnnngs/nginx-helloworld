@@ -34,7 +34,7 @@ node {
             notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>SUCCESS set to FALSE</b>: Docker Availability BAD <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN 
             success = false
         }
-	if (!Boolean.parseBoolean(success)) { 
+	if ( !success  { 
         echo "Yes"
     } else {
         echo "No"
