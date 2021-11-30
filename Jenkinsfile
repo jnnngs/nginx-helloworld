@@ -1,9 +1,9 @@
 node {
-    
+
+    def success = false
     def app
     def image = 'registry.hub.docker.com/jnnngs/nginx-helloworld'
     def buildtag = "nginx-hello-world-${env.BUILD_NUMBER}"
-
     def branch = "${env.BRANCH_NAME}".replaceAll('/','_')
 
     currentBuild.displayName = "${buildtag}"
@@ -28,13 +28,17 @@ node {
             sh "docker ps | grep 'nginx-hw-example-${env.BUILD_NUMBER}'"
             echo "Docker Availability GOOD"
             notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Testing</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Test</b> #${env.BUILD_NUMBER}, <b>Container</b> EXISTS, <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN
-            // return true
+            success = true
         } catch (Exception e) {
             echo "Docker Availability BAD"
-            notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>Testing</b>: <a target='_blank' href='${env.JOB_NAME}'>${env.BUILD_TAG}</a>, <b>Test</b> #${env.BUILD_NUMBER}, <b>Container</b> DOES NOT EXISTS <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN 
-            return false
+            notifyEvents message: "${new Date().format('dd MMM yyyy HH:mm:ss')} - <b>SUCCESS set to FALSE</b>: Docker Availability BAD <b>Duration</b> ${currentBuild.durationString.minus(' and counting')}", token: env.SLACK_TOKEN 
+            success = false
         }
-	         
+	if (!Boolean.parseBoolean(success)) { 
+        echo "Yes"
+    } else {
+        echo "No"
+    }         
     stage "Push image to DockerHub"
 	try { 
     	    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials')
