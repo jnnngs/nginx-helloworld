@@ -41,7 +41,7 @@ node {
 
     if ( success ) {        
         stage "Push image to DockerHub"
-        try { 
+        try {  
                 docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials')
             {
                     app.push("latest")  
